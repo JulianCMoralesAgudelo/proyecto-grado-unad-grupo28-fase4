@@ -1,0 +1,46 @@
+AGUA ANTIOQUIA - FASE 4 - GRUPO 28
+Práctica simulada. Organizaciones, cuentas, usuarios y lecturas son ficticios.
+
+INICIO DEL ENTORNO OBJETIVO
+1. Abre Docker Desktop y espera que el motor esté listo.
+2. Abre una terminal en esta carpeta.
+3. Ejecuta: python iniciar.py
+4. Abre http://127.0.0.1:8086
+5. Consulta credenciales_locales.txt generado localmente. No lo publiques.
+6. Ejecuta: python comprobar_docker.py
+
+Tecnologías objetivo: Django 5.2, PostgreSQL 16 y Gunicorn, mediante Compose.
+La interfaz usa HTML/CSS/JavaScript; el servidor verifica permisos por solicitud.
+Las versiones instaladas se registran con pip freeze al comprobar el entorno.
+La base PostgreSQL no publica un puerto al equipo ni a Internet.
+
+RECORRIDO
+- Usa sim-a-admin para consultar el resumen y administrar permisos del mismo acueducto.
+- Usa sim-a-operador para registrar usuario, predio, medidor e instalación.
+- En Lecturas, una lectura acumulada válida produce el consumo desde la anterior.
+- Una lectura decreciente queda pendiente, sin consumo. Resuelve con motivo.
+- Cierra la instalación antes de cambiar de medidor; la nueva serie tiene otra base.
+- En Novedades registra, pasa a en gestión y cierra con motivo.
+- Consulta Reportes, filtra usuario/mes y exporta solo con permiso explícito.
+- Revisa Auditoría para observar valores anteriores/posteriores y responsable.
+- Cierra sesión y accede como consulta: no se muestran acciones de escritura.
+- sim-b utiliza una organización diferente; no debe ver los datos de sim-a.
+
+PRUEBAS Y LÍMITES
+verificar.py ejecuta una campaña local WSGI/SQLite de servicios compartidos.
+Ese ensayo no sustituye comprobar_docker.py ni las pruebas humanas M01.
+No publicar aprobaciones de Django/PostgreSQL si no existe un log satisfactorio.
+Una prueba automatizada no equivale a satisfacción de usuarios de un acueducto.
+La referencia WSGI de app.py solo se usa en laboratorio local; no es despliegue público.
+
+RESPALDO POSTGRESQL
+Crear copia nueva desde Python, evitando redirecciones binarias de PowerShell:
+python respaldo_postgresql.py
+La copia se guarda fuera del código y no se incluye en GitHub.
+No ejecutar docker compose down -v: eliminaría el volumen del laboratorio.
+Para detener conservando datos: docker compose stop
+
+GITHUB
+Publicar únicamente código, migraciones, instrucciones y evidencia anonimizada.
+Excluir .env, credenciales_locales.txt, bases y respaldos.
+El enlace del repositorio de entrega y el video se incorporarán al documento maestro cuando estén disponibles.

@@ -1,0 +1,33 @@
+name: pdg-grupo28-fase4
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: agua_simulada
+      POSTGRES_USER: agua
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Ejecuta preparar.py}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agua -d agua_simulada"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+  web:
+    build: .
+    environment:
+      DJANGO_SETTINGS_MODULE: proyecto.settings
+      SECRET_KEY: ${SECRET_KEY:?Ejecuta preparar.py}
+      PGHOST: db
+      PGPORT: "5432"
+      PGDATABASE: agua_simulada
+      PGUSER: agua
+      PGPASSWORD: ${POSTGRES_PASSWORD:?Ejecuta preparar.py}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:?Ejecuta preparar.py}
+    ports:
+      - "127.0.0.1:8086:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  pgdata:

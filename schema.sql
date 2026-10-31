@@ -1,0 +1,15 @@
+PRAGMA foreign_keys=ON;
+CREATE TABLE IF NOT EXISTS acueducto(id TEXT PRIMARY KEY,nombre TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS cuenta(id INTEGER PRIMARY KEY,aq TEXT NOT NULL REFERENCES acueducto(id),login TEXT UNIQUE NOT NULL,hash TEXT NOT NULL,rol TEXT NOT NULL CHECK(rol IN('admin','operador','consulta')),exportar INTEGER NOT NULL DEFAULT 0 CHECK(exportar IN(0,1)),activo INTEGER NOT NULL DEFAULT 1,UNIQUE(aq,id));
+CREATE TABLE IF NOT EXISTS sesion(token TEXT PRIMARY KEY,cuenta INTEGER NOT NULL REFERENCES cuenta(id),csrf TEXT NOT NULL,expira REAL NOT NULL);
+CREATE TABLE IF NOT EXISTS usuario(id INTEGER PRIMARY KEY,aq TEXT NOT NULL REFERENCES acueducto(id),codigo TEXT NOT NULL,activo INTEGER NOT NULL DEFAULT 1,UNIQUE(aq,codigo),UNIQUE(aq,id));
+CREATE TABLE IF NOT EXISTS predio(id INTEGER PRIMARY KEY,aq TEXT NOT NULL,codigo TEXT NOT NULL,usuario INTEGER NOT NULL,FOREIGN KEY(aq,usuario) REFERENCES usuario(aq,id),UNIQUE(aq,codigo),UNIQUE(aq,id));
+CREATE TABLE IF NOT EXISTS medidor(id INTEGER PRIMARY KEY,aq TEXT NOT NULL REFERENCES acueducto(id),serial TEXT NOT NULL,UNIQUE(aq,serial),UNIQUE(aq,id));
+CREATE TABLE IF NOT EXISTS instalacion(id INTEGER PRIMARY KEY,aq TEXT NOT NULL,predio INTEGER NOT NULL,medidor INTEGER NOT NULL,inicio TEXT NOT NULL,fin TEXT,CHECK(fin IS NULL OR fin>inicio),FOREIGN KEY(aq,predio) REFERENCES predio(aq,id),FOREIGN KEY(aq,medidor) REFERENCES medidor(aq,id),UNIQUE(aq,id));
+CREATE TABLE IF NOT EXISTS lectura(id INTEGER PRIMARY KEY,aq TEXT NOT NULL,instalacion INTEGER NOT NULL,fecha TEXT NOT NULL,valor INTEGER NOT NULL CHECK(valor>=0),estado TEXT NOT NULL CHECK(estado IN('valida','pendiente','descartada')),FOREIGN KEY(aq,instalacion) REFERENCES instalacion(aq,id),UNIQUE(instalacion,fecha),UNIQUE(aq,id));
+CREATE TABLE IF NOT EXISTS novedad(id INTEGER PRIMARY KEY,aq TEXT NOT NULL REFERENCES acueducto(id),descripcion TEXT NOT NULL,estado TEXT NOT NULL CHECK(estado IN('abierta','en gestion','cerrada')),apertura TEXT NOT NULL,cierre TEXT,motivo TEXT);
+CREATE TABLE IF NOT EXISTS auditoria(id INTEGER PRIMARY KEY,aq TEXT NOT NULL,actor INTEGER NOT NULL,instante TEXT NOT NULL,entidad TEXT NOT NULL,registro INTEGER NOT NULL,accion TEXT NOT NULL,anterior TEXT,posterior TEXT,motivo TEXT NOT NULL,FOREIGN KEY(aq,actor) REFERENCES cuenta(aq,id));
+CREATE TRIGGER IF NOT EXISTS auditoria_no_update BEFORE UPDATE ON auditoria BEGIN SELECT RAISE(ABORT,'Auditoria inmutable'); END;
+CREATE TRIGGER IF NOT EXISTS auditoria_no_delete BEFORE DELETE ON auditoria BEGIN SELECT RAISE(ABORT,'Auditoria inmutable'); END;
+CREATE INDEX IF NOT EXISTS lectura_serie ON lectura(aq,instalacion,fecha);
+CREATE INDEX IF NOT EXISTS auditoria_aq ON auditoria(aq,id);

@@ -1,0 +1,7 @@
+.env
+credenciales_locales.txt
+datos
+__pycache__
+*.sqlite3
+.git
+*.zip
