@@ -43,4 +43,5 @@ Para detener conservando datos: docker compose stop
 GITHUB
 Publicar únicamente código, migraciones, instrucciones y evidencia anonimizada.
 Excluir .env, credenciales_locales.txt, bases y respaldos.
-El enlace del repositorio de entrega y el video se incorporarán al documento maestro cuando estén disponibles.
+Repositorio público del prototipo: https://github.com/JulianCMoralesAgudelo/proyecto-grado-unad-grupo28-fase4
+El enlace del video de máximo 10 minutos sigue pendiente. Los participantes deben mantener la cámara encendida durante la socialización.

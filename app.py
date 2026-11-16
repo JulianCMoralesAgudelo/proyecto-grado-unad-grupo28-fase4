@@ -19,7 +19,7 @@ from http.cookies import SimpleCookie
 from wsgiref.simple_server import make_server
 
 ROOT=Path(__file__).resolve().parent
-VERSION='0.2.0-simulacion'
+VERSION='0.3.0-simulacion'
 
 class Error(Exception):
     def __init__(self,message,status=400):
@@ -118,7 +118,7 @@ def state(db,actor):
     return data
 
 def mutate(db,actor,action,d):
-    permit(actor,admin=action=='permisos')
+    permit(actor,admin=action in ('permisos','actualizar_usuario'))
     aq=actor['aq']; before=None
     if 'aq' in d and d['aq']!=aq: raise Error('No se admite cambiar de acueducto',403)
     reason=d.get('motivo','Registro de operación simulada')
@@ -126,8 +126,25 @@ def mutate(db,actor,action,d):
         code=text(d.get('codigo'),1,50)
         key=db.execute('INSERT INTO usuario(aq,codigo) VALUES(?,?)',(aq,code)).lastrowid
         entity='usuario'
+    elif action=='actualizar_usuario':
+        entity='usuario'
+        before=scope(db,actor,entity,d.get('id'))
+        key=before['id']
+        code=text(d.get('codigo'),1,50)
+        reason=text(d.get('motivo'),3,500)
+        active=d.get('activo')
+        if type(active) is not bool:
+            raise Error('Estado de usuario inválido')
+        updated=db.execute(
+            'UPDATE usuario SET codigo=?,activo=? WHERE aq=? AND id=? AND codigo=? AND activo=? RETURNING id',
+            (code,int(active),aq,key,before['codigo'],before['activo'])
+        ).fetchone()
+        if not updated:
+            raise Error('El usuario cambió. Actualiza la vista y vuelve a intentar.')
     elif action=='predio':
         u=scope(db,actor,'usuario',d.get('usuario'))
+        if not u['activo']:
+            raise Error('No se admite un predio nuevo para un usuario inactivo')
         key=db.execute('INSERT INTO predio(aq,codigo,usuario) VALUES(?,?,?)',(aq,text(d.get('codigo'),1,50),u['id'])).lastrowid
         entity='predio'
     elif action=='medidor':

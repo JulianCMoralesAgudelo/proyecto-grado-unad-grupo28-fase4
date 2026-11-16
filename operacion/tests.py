@@ -40,6 +40,23 @@ class IntegratedTests(TestCase):
         self.login('sim-a-consulta');self.post('usuario',{'codigo':'X'},403);self.post('corregir_lectura',{'id':self.r,'valor':'100','estado':'valida','motivo':'Intento'},403)
     def test_export_permissions_and_total(self):
         self.post('lectura',self.reading());self.assertEqual(self.client.get('/api/export').status_code,403);self.login('sim-a-admin');r=self.client.get('/api/export?mes=2026-03&usuario=U001');self.assertEqual(r.status_code,200);self.assertIn('15.250',r.content.decode('utf-8-sig'));self.assertEqual(self.client.get('/api/export?aq=SIM-B').status_code,403)
+    def test_user_update_and_logical_deactivation(self):
+        change = {'id': self.u, 'codigo': 'U001-C', 'activo': False, 'motivo': 'Baja de laboratorio'}
+        self.post('actualizar_usuario', change, 403)
+        self.login('sim-b-admin')
+        self.post('actualizar_usuario', change, 404)
+        self.login('sim-a-admin')
+        self.post('actualizar_usuario', change)
+        state = self.state()
+        self.assertEqual(state['usuario'][0]['activo'], 0)
+        self.assertEqual(state['lectura'][0]['id'], self.r)
+        event = state['auditoria'][-1]
+        self.assertEqual(event['motivo'], change['motivo'])
+        self.assertEqual(json.loads(event['anterior'])['codigo'], 'U001')
+        self.assertEqual(json.loads(event['posterior'])['codigo'], 'U001-C')
+        self.post('predio', {'codigo': 'P002', 'usuario': self.u}, 400)
+        self.post('actualizar_usuario', {**change, 'activo': True, 'motivo': 'Reactivación de laboratorio'})
+        self.post('predio', {'codigo': 'P002', 'usuario': self.u})
     def test_csrf(self):
         r=self.client.post('/api/usuario',data=json.dumps({'codigo':'X'}),content_type='application/json');self.assertEqual(r.status_code,403)
     def test_cross_origin(self):
