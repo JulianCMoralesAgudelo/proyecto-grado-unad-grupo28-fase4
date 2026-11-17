@@ -4,3 +4,4 @@ __pycache__/
 *.sqlite3-*
 *.env
 credenciales*
+datos_abiertos/originales/

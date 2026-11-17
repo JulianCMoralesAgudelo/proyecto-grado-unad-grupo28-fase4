@@ -2,9 +2,15 @@
 
 Prototipo académico de la Fase 4 para gestionar usuarios, predios, medidores, lecturas, consumos y novedades de acueductos rurales. El escenario de demostración usa datos ficticios.
 
-## Versión 0.3
+## Publicación histórica v0.3
 
-Los 31 archivos del prototipo corresponden al árbol `7e0da2f5ff4b5dc12e07cef737a61afe3074c161` del commit académico `cdb3349993ee184e4c6e3a53d7e3711bcb584e6f`. Este README documenta el arranque y la verificación.
+Los 31 archivos del prototipo v0.3 publicado en `d43bc5a` corresponden al árbol `7e0da2f5ff4b5dc12e07cef737a61afe3074c161` del commit académico `cdb3349993ee184e4c6e3a53d7e3711bcb584e6f`. Este README documenta el arranque y la verificación.
+
+## Versión 0.4.0-datos-abiertos
+
+La vista Datos abiertos consulta registros oficiales agregados. Los entornos SIM-A y SIM-B mantienen la operación con usuarios, medidores y lecturas sintéticos. Consulte el [inventario](datos_abiertos/INVENTARIO.md) para las fuentes, transformaciones y limitaciones.
+
+La carga se ejecuta con `python manage.py importar_datos_abiertos --directorio /app/datos_abiertos/originales` dentro del servicio web, tras preparar localmente los cinco archivos indicados en el inventario y en el comando de importación. Los descargables originales se conservan fuera del repositorio. Después de iniciar el prototipo, las consultas de datos abiertos requieren ejecutar esa carga.
 
 ## Ejecutar en local
 

@@ -74,3 +74,17 @@ class IntegratedTests(TestCase):
             with transaction.atomic():self.db.execute("INSERT INTO predio(aq,codigo,usuario) VALUES('SIM-B','CRUCE',?)",(self.u,))
     def test_health_ui_and_hash_not_disclosed(self):
         self.assertEqual(self.client.get('/').status_code,200);body=json.dumps(self.state());self.assertNotIn('hash',body);self.assertNotIn(PASSWORD,body)
+    def test_open_data_keeps_aggregate_granularity(self):
+        self.db.execute("INSERT INTO fuente_oficial(id,nombre,entidad,url,licencia,granularidad,importado_en) VALUES(?,?,?,?,?,?,?)",
+            ('prueba-oficial','Fuente oficial','Entidad pública','https://example.test/dataset','CC BY','Agregado por período','2026-11-17T00:00:00+00:00'))
+        self.db.execute("INSERT INTO consumo_reportado(fuente_id,huella,prestador,municipio,servicio,periodo,estrato_uso,suscriptores,consumo_basico_m3,consumo_total_m3) VALUES(?,?,?,?,?,?,?,?,?,?)",
+            ('prueba-oficial','a'*64,'Prestador real','Medellín','Acueducto','2026-01-31','1',10,'125.500','125.500'))
+        summary=self.client.get('/api/real/resumen')
+        self.assertEqual(summary.status_code,200,summary.content)
+        self.assertEqual(summary.json()['conteos']['consumos'],1)
+        result=self.client.get('/api/real/consumos?municipio=Medell')
+        self.assertEqual(result.status_code,200,result.content)
+        row=result.json()['filas'][0]
+        self.assertEqual(row['suscriptores'],10)
+        self.assertNotIn('usuario',row)
+        self.assertNotIn('medidor',row)

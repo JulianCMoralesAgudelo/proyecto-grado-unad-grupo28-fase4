@@ -19,7 +19,7 @@ from http.cookies import SimpleCookie
 from wsgiref.simple_server import make_server
 
 ROOT=Path(__file__).resolve().parent
-VERSION='0.3.0-simulacion'
+VERSION='0.4.0-datos-abiertos'
 
 class Error(Exception):
     def __init__(self,message,status=400):
@@ -115,7 +115,67 @@ def state(db,actor):
     data['lectura']=consumptions(db,aq)
     data['cuentas']=[{k:r[k] for k in ['id','login','rol','exportar']} for r in db.execute('SELECT * FROM cuenta WHERE aq=?',(aq,))] if actor['rol']=='admin' else []
     data['total_consumo']=format(sum((Decimal(r['consumo']) for r in data['lectura'] if r['consumo'] is not None),Decimal(0)),'.3f')
+    data['entornos']={'principal':'datos_abiertos','simulacion':actor['aq']}
     return data
+
+def query_rows(db,sql,params=()):
+    return [dict(row) for row in db.execute(sql,params).fetchall()]
+
+def page_args(q):
+    try: page=max(1,int(q.get('pagina',['1'])[0])); size=min(200,max(1,int(q.get('limite',['50'])[0]))); return page,size
+    except ValueError: raise Error('Paginación inválida')
+
+def open_data(db,route,q):
+    page,size=page_args(q); offset=(page-1)*size
+    if route=='resumen':
+        sources=query_rows(db,'SELECT id,nombre,entidad,url,licencia,granularidad,fecha_actualizacion,importado_en FROM fuente_oficial ORDER BY id')
+        counts={}
+        for name,table in [('consumos','consumo_reportado'),('cobertura','cobertura_reportada'),('interrupciones','interrupcion_oficial'),('prestadores','prestador_oficial')]:
+            counts[name]=db.execute(f'SELECT COUNT(*) FROM {table}').fetchone()[0]
+        periods=query_rows(db,"SELECT fuente_id,MIN(periodo) periodo_desde,MAX(periodo) periodo_hasta,COUNT(DISTINCT prestador) prestadores FROM consumo_reportado GROUP BY fuente_id ORDER BY fuente_id")
+        municipalities=query_rows(db,'SELECT municipio,COUNT(*) registros FROM interrupcion_oficial GROUP BY municipio ORDER BY municipio')
+        imports=query_rows(db,'SELECT fuente_id,finalizado_en,filas_leidas,filas_validas,filas_rechazadas,registros_almacenados,estado,detalle FROM importacion_datos_abiertos ORDER BY id DESC LIMIT 10')
+        return {'fuentes':sources,'conteos':counts,'periodos_consumo':periods,'municipios_interrupciones':municipalities,'importaciones':imports}
+    if route=='consumos':
+        where=[];params=[]
+        for key,column in [('fuente','fuente_id'),('prestador','prestador'),('municipio','municipio'),('estrato','estrato_uso')]:
+            value=q.get(key,[''])[0].strip()
+            if value:where.append(f'LOWER({column}) LIKE LOWER(?)');params.append('%'+value+'%')
+        for key,op in [('desde','>='),('hasta','<=')]:
+            value=q.get(key,[''])[0].strip()
+            if value:where.append(f'periodo {op} ?');params.append(value)
+        clause=(' WHERE '+' AND '.join(where)) if where else ''
+        total=db.execute('SELECT COUNT(*) FROM consumo_reportado'+clause,params).fetchone()[0]
+        rows=query_rows(db,'SELECT fuente_id,prestador,municipio,periodo,estrato_uso,suscriptores,consumo_basico_m3,consumo_complementario_m3,consumo_total_m3,calidad_alerta FROM consumo_reportado'+clause+' ORDER BY periodo DESC,prestador,estrato_uso LIMIT ? OFFSET ?',params+[size,offset])
+    elif route=='interrupciones':
+        where=[];params=[]
+        for key,column in [('municipio','municipio'),('motivo','motivo')]:
+            value=q.get(key,[''])[0].strip()
+            if value:where.append(f'LOWER({column}) LIKE LOWER(?)');params.append('%'+value+'%')
+        for key,op in [('desde','>='),('hasta','<=')]:
+            value=q.get(key,[''])[0].strip()
+            if value:where.append(f'inicio {op} ?');params.append(value)
+        clause=(' WHERE '+' AND '.join(where)) if where else ''
+        total=db.execute('SELECT COUNT(*) FROM interrupcion_oficial'+clause,params).fetchone()[0]
+        rows=query_rows(db,'SELECT fuente_id,prestador,municipio,inicio,fin,duracion_horas,motivo,impacto,circuito,barrio,direccion,estado FROM interrupcion_oficial'+clause+' ORDER BY inicio DESC LIMIT ? OFFSET ?',params+[size,offset])
+    elif route=='cobertura':
+        where=[];params=[]
+        for key,column in [('municipio','municipio'),('comuna','comuna'),('estrato','estrato_uso')]:
+            value=q.get(key,[''])[0].strip()
+            if value:where.append(f'LOWER({column}) LIKE LOWER(?)');params.append('%'+value+'%')
+        clause=(' WHERE '+' AND '.join(where)) if where else ''
+        total=db.execute('SELECT COUNT(*) FROM cobertura_reportada'+clause,params).fetchone()[0]
+        rows=query_rows(db,'SELECT fuente_id,municipio,comuna,periodo,estrato_uso,suscriptores,cobertura_pct,calidad_alerta FROM cobertura_reportada'+clause+' ORDER BY periodo DESC,comuna,estrato_uso LIMIT ? OFFSET ?',params+[size,offset])
+    elif route=='prestadores':
+        where=[];params=[]
+        for key,column in [('municipio','municipio_prestacion'),('prestador','nombre')]:
+            value=q.get(key,[''])[0].strip()
+            if value:where.append(f'LOWER({column}) LIKE LOWER(?)');params.append('%'+value+'%')
+        clause=(' WHERE '+' AND '.join(where)) if where else ''
+        total=db.execute('SELECT COUNT(*) FROM prestador_oficial'+clause,params).fetchone()[0]
+        rows=query_rows(db,'SELECT fuente_id,nombre,servicio,municipio_prestacion,municipio_domicilio FROM prestador_oficial'+clause+' ORDER BY municipio_prestacion,nombre LIMIT ? OFFSET ?',params+[size,offset])
+    else: raise Error('Consulta de datos abiertos no disponible',404)
+    return {'pagina':page,'limite':size,'total':total,'filas':rows}
 
 def mutate(db,actor,action,d):
     permit(actor,admin=action in ('permisos','actualizar_usuario'))
@@ -241,6 +301,10 @@ class Application:
                     actor=dict(row)
                     if method=='POST' and not hmac.compare_digest(env.get('HTTP_X_CSRF_TOKEN',''),actor['csrf']): raise Error('Token de formulario inválido',403)
                     if route=='/api/state' and method=='GET': body=json.dumps({**state(db,actor),'csrf':actor['csrf']},ensure_ascii=False).encode('utf-8')
+                    elif route.startswith('/api/real/') and method=='GET':
+                        from urllib.parse import parse_qs
+                        q=parse_qs(env.get('QUERY_STRING',''))
+                        body=json.dumps(open_data(db,route[10:],q),ensure_ascii=False,default=str).encode('utf-8')
                     elif route=='/api/export' and method=='GET':
                         if not actor['exportar']: raise Error('Exportación no autorizada',403)
                         from urllib.parse import parse_qs
@@ -294,5 +358,5 @@ if __name__=='__main__':
     else:
         if not Path(args.db).exists(): raise SystemExit('Primero ejecuta python app.py --init')
         with make_server('127.0.0.1',args.port,Application(args.db)) as server:
-            print(f'Agua Antioquia {VERSION}: http://127.0.0.1:{args.port} - datos ficticios',flush=True)
+            print(f'Agua Antioquia {VERSION}: http://127.0.0.1:{args.port} - datos abiertos y simulación separada',flush=True)
             server.serve_forever()
