@@ -1,0 +1,74 @@
+{
+  "fecha_utc": "2026-11-17T03:32:04.916270+00:00",
+  "alcance": "Ensayo interno técnico. No es CP18a ni sustituye primeros intentos de participantes autorizados en Microsoft Edge.",
+  "url": "http://127.0.0.1:18087",
+  "version": "0.3.0-simulacion",
+  "roles": {
+    "admin": {
+      "login": "sim-a-admin",
+      "rol": "admin",
+      "exportar": true,
+      "cuentas_visibles": 3
+    },
+    "operador": {
+      "login": "sim-a-operador",
+      "rol": "operador",
+      "exportar": false,
+      "cuentas_visibles": 0
+    },
+    "consulta": {
+      "login": "sim-a-consulta",
+      "rol": "consulta",
+      "exportar": false,
+      "cuentas_visibles": 0
+    }
+  },
+  "datos_iniciales_sim_a": {
+    "usuarios": 8,
+    "medidores": 8,
+    "lecturas": 24,
+    "novedades": 1,
+    "consumo_total_m3": "196.000"
+  },
+  "m01a_preparacion": {
+    "usuario": "U001",
+    "periodo": "2026-03",
+    "lectura_origen_inicial": {
+      "id": 1,
+      "fecha": "2026-02-01T00:00:00+00:00",
+      "valor_m3": "100.000"
+    },
+    "lectura_origen_final": {
+      "id": 2,
+      "fecha": "2026-03-01T00:00:00+00:00",
+      "valor_m3": "112.250"
+    },
+    "consumo_m3": "12.250",
+    "verificado_api": true
+  },
+  "m01b_preparacion": {
+    "rol": "operador",
+    "instalacion_id": 1,
+    "fecha": "2026-05-01T00:00:00+00:00",
+    "lectura_m3": "136.750",
+    "consumo_m3": "12.250",
+    "estado": "valida",
+    "http": 200,
+    "verificado_api": true
+  },
+  "m01c_preparacion": {
+    "novedad_id": 1,
+    "descripcion": "Ensayo sintético de baja presión; no corresponde a un evento real",
+    "apertura": "2026-11-17T03:29:14+00:00",
+    "fecha_corte": "2026-11-17T03:32:04.916292+00:00",
+    "estado": "abierta",
+    "verificado_api": true
+  },
+  "controles": {
+    "consulta_escritura_denegada_http": 403,
+    "consulta_escritura_mensaje": "Permiso denegado",
+    "aislamiento_sim_b": true,
+    "edge_externo": "No disponible: browser access host is unavailable",
+    "dictamen_cp18a": "No emitido; requiere primeros intentos elegibles de participantes autorizados."
+  }
+}

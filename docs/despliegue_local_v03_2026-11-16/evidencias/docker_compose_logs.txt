@@ -1,0 +1,91 @@
+web-1  | 2026-11-17T03:29:15.500095937Z [2026-11-17 03:29:15 +0000] [1] [INFO] Starting gunicorn 23.0.0
+web-1  | 2026-11-17T03:29:15.500475256Z [2026-11-17 03:29:15 +0000] [1] [INFO] Listening at: http://0.0.0.0:8000 (1)
+web-1  | 2026-11-17T03:29:15.500489834Z [2026-11-17 03:29:15 +0000] [1] [INFO] Using worker: sync
+web-1  | 2026-11-17T03:29:15.502628230Z [2026-11-17 03:29:15 +0000] [7] [INFO] Booting worker with pid: 7
+web-1  | 2026-11-17T03:29:15.518845790Z [2026-11-17 03:29:15 +0000] [8] [INFO] Booting worker with pid: 8
+web-1  | 2026-11-17T03:29:23.459994515Z 172.27.0.1 - - [16/Nov/2026:22:29:23 -0500] "GET / HTTP/1.1" 200 1476 "-" "curl/8.18.0"
+web-1  | 2026-11-17T03:31:59.005738644Z 172.27.0.1 - - [16/Nov/2026:22:31:59 -0500] "GET / HTTP/1.1" 200 1476 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0"
+web-1  | 2026-11-17T03:31:59.042222913Z 172.27.0.1 - - [16/Nov/2026:22:31:59 -0500] "GET /styles.css HTTP/1.1" 200 3189 "http://127.0.0.1:18087/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0"
+web-1  | 2026-11-17T03:31:59.055366650Z 172.27.0.1 - - [16/Nov/2026:22:31:59 -0500] "GET /ui.js HTTP/1.1" 200 9877 "http://127.0.0.1:18087/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0"
+web-1  | 2026-11-17T03:31:59.179547994Z 172.27.0.1 - - [16/Nov/2026:22:31:59 -0500] "GET /api/state HTTP/1.1" 401 27 "http://127.0.0.1:18087/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0"
+web-1  | 2026-11-17T03:31:59.190366513Z 172.27.0.1 - - [16/Nov/2026:22:31:59 -0500] "GET /favicon.ico HTTP/1.1" 401 27 "http://127.0.0.1:18087/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0"
+web-1  | 2026-11-17T03:32:04.396004665Z 172.27.0.1 - - [16/Nov/2026:22:32:04 -0500] "POST /api/login HTTP/1.1" 200 75 "-" "Python-urllib/3.14"
+web-1  | 2026-11-17T03:32:04.418024827Z 172.27.0.1 - - [16/Nov/2026:22:32:04 -0500] "GET /api/state HTTP/1.1" 200 26943 "-" "Python-urllib/3.14"
+web-1  | 2026-11-17T03:32:04.543939985Z 172.27.0.1 - - [16/Nov/2026:22:32:04 -0500] "POST /api/login HTTP/1.1" 200 75 "-" "Python-urllib/3.14"
+web-1  | 2026-11-17T03:32:04.565593177Z 172.27.0.1 - - [16/Nov/2026:22:32:04 -0500] "GET /api/state HTTP/1.1" 200 26741 "-" "Python-urllib/3.14"
+web-1  | 2026-11-17T03:32:04.691372428Z 172.27.0.1 - - [16/Nov/2026:22:32:04 -0500] "POST /api/login HTTP/1.1" 200 75 "-" "Python-urllib/3.14"
+web-1  | 2026-11-17T03:32:04.712415433Z 172.27.0.1 - - [16/Nov/2026:22:32:04 -0500] "GET /api/state HTTP/1.1" 200 26741 "-" "Python-urllib/3.14"
+web-1  | 2026-11-17T03:32:04.840288616Z 172.27.0.1 - - [16/Nov/2026:22:32:04 -0500] "POST /api/login HTTP/1.1" 200 75 "-" "Python-urllib/3.14"
+web-1  | 2026-11-17T03:32:04.861554347Z 172.27.0.1 - - [16/Nov/2026:22:32:04 -0500] "GET /api/state HTTP/1.1" 200 26960 "-" "Python-urllib/3.14"
+web-1  | 2026-11-17T03:32:04.881627773Z 172.27.0.1 - - [16/Nov/2026:22:32:04 -0500] "POST /api/lectura HTTP/1.1" 200 52 "-" "Python-urllib/3.14"
+web-1  | 2026-11-17T03:32:04.902371246Z 172.27.0.1 - - [16/Nov/2026:22:32:04 -0500] "GET /api/state HTTP/1.1" 200 27340 "-" "Python-urllib/3.14"
+web-1  | 2026-11-17T03:32:04.916127582Z 172.27.0.1 - - [16/Nov/2026:22:32:04 -0500] "POST /api/usuario HTTP/1.1" 403 29 "-" "Python-urllib/3.14"
+db-1   | 2026-11-17T03:29:05.340492094Z The files belonging to this database system will be owned by user "postgres".
+db-1   | 2026-11-17T03:29:05.340519406Z This user must also own the server process.
+db-1   | 2026-11-17T03:29:05.340528526Z 
+db-1   | 2026-11-17T03:29:05.340563355Z The database cluster will be initialized with locale "en_US.utf8".
+db-1   | 2026-11-17T03:29:05.340572825Z The default database encoding has accordingly been set to "UTF8".
+db-1   | 2026-11-17T03:29:05.340576307Z The default text search configuration will be set to "english".
+db-1   | 2026-11-17T03:29:05.340579165Z 
+db-1   | 2026-11-17T03:29:05.340581815Z Data page checksums are disabled.
+db-1   | 2026-11-17T03:29:05.340670810Z 
+db-1   | 2026-11-17T03:29:05.340729143Z fixing permissions on existing directory /var/lib/postgresql/data ... ok
+db-1   | 2026-11-17T03:29:05.341166262Z creating subdirectories ... ok
+db-1   | 2026-11-17T03:29:05.341322462Z selecting dynamic shared memory implementation ... posix
+db-1   | 2026-11-17T03:29:05.355890503Z selecting default max_connections ... 100
+db-1   | 2026-11-17T03:29:05.373915857Z selecting default shared_buffers ... 128MB
+db-1   | 2026-11-17T03:29:05.417006737Z selecting default time zone ... UTC
+db-1   | 2026-11-17T03:29:05.418617243Z creating configuration files ... ok
+db-1   | 2026-11-17T03:29:05.536662823Z running bootstrap script ... ok
+db-1   | 2026-11-17T03:29:05.719685080Z sh: locale: not found
+db-1   | 2026-11-17T03:29:05.721154805Z 2026-11-17 03:29:05.719 UTC [35] WARNING:  no usable system locales were found
+db-1   | 2026-11-17T03:29:06.112455464Z performing post-bootstrap initialization ... ok
+db-1   | 2026-11-17T03:29:08.097948042Z syncing data to disk ... ok
+db-1   | 2026-11-17T03:29:08.097987348Z 
+db-1   | 2026-11-17T03:29:08.097959651Z initdb: warning: enabling "trust" authentication for local connections
+db-1   | 2026-11-17T03:29:08.098024354Z initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+db-1   | 2026-11-17T03:29:08.097998742Z 
+db-1   | 2026-11-17T03:29:08.098049269Z Success. You can now start the database server using:
+db-1   | 2026-11-17T03:29:08.098058471Z 
+db-1   | 2026-11-17T03:29:08.098066326Z     pg_ctl -D /var/lib/postgresql/data -l logfile start
+db-1   | 2026-11-17T03:29:08.098074298Z 
+db-1   | 2026-11-17T03:29:08.151095427Z waiting for server to start....2026-11-17 03:29:08.151 UTC [41] LOG:  starting PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+db-1   | 2026-11-17T03:29:08.152517503Z 2026-11-17 03:29:08.152 UTC [41] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1   | 2026-11-17T03:29:08.157600736Z 2026-11-17 03:29:08.157 UTC [44] LOG:  database system was shut down at 2026-11-17 03:29:06 UTC
+db-1   | 2026-11-17T03:29:08.181163891Z 2026-11-17 03:29:08.181 UTC [41] LOG:  database system is ready to accept connections
+db-1   | 2026-11-17T03:29:08.232517911Z  done
+db-1   | 2026-11-17T03:29:08.232535258Z server started
+db-1   | 2026-11-17T03:29:08.343909581Z CREATE DATABASE
+db-1   | 2026-11-17T03:29:08.344291067Z 
+db-1   | 2026-11-17T03:29:08.344339363Z 
+db-1   | 2026-11-17T03:29:08.344393818Z /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+db-1   | 2026-11-17T03:29:08.344402790Z 
+db-1   | 2026-11-17T03:29:08.344996016Z waiting for server to shut down....2026-11-17 03:29:08.344 UTC [41] LOG:  received fast shutdown request
+db-1   | 2026-11-17T03:29:08.348041041Z 2026-11-17 03:29:08.347 UTC [41] LOG:  aborting any active transactions
+db-1   | 2026-11-17T03:29:08.349958811Z 2026-11-17 03:29:08.349 UTC [41] LOG:  background worker "logical replication launcher" (PID 47) exited with exit code 1
+db-1   | 2026-11-17T03:29:08.350139598Z 2026-11-17 03:29:08.350 UTC [42] LOG:  shutting down
+db-1   | 2026-11-17T03:29:08.352284761Z 2026-11-17 03:29:08.352 UTC [42] LOG:  checkpoint starting: shutdown immediate
+db-1   | 2026-11-17T03:29:09.048709727Z 2026-11-17 03:29:09.048 UTC [42] LOG:  checkpoint complete: wrote 926 buffers (5.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.064 s, sync=0.625 s, total=0.699 s; sync files=301, longest=0.011 s, average=0.003 s; distance=4283 kB, estimate=4283 kB; lsn=0/1925D60, redo lsn=0/1925D60
+db-1   | 2026-11-17T03:29:09.055121356Z 2026-11-17 03:29:09.054 UTC [41] LOG:  database system is shut down
+db-1   | 2026-11-17T03:29:09.146794897Z  done
+db-1   | 2026-11-17T03:29:09.146809960Z server stopped
+db-1   | 2026-11-17T03:29:09.147713998Z 
+db-1   | 2026-11-17T03:29:09.147726678Z PostgreSQL init process complete; ready for start up.
+db-1   | 2026-11-17T03:29:09.147730325Z 
+db-1   | 2026-11-17T03:29:09.166728190Z 2026-11-17 03:29:09.166 UTC [1] LOG:  starting PostgreSQL 16.15 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+db-1   | 2026-11-17T03:29:09.166860965Z 2026-11-17 03:29:09.166 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+db-1   | 2026-11-17T03:29:09.166870823Z 2026-11-17 03:29:09.166 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+db-1   | 2026-11-17T03:29:09.169755554Z 2026-11-17 03:29:09.169 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1   | 2026-11-17T03:29:09.173747782Z 2026-11-17 03:29:09.173 UTC [57] LOG:  database system was shut down at 2026-11-17 03:29:09 UTC
+db-1   | 2026-11-17T03:29:09.179432747Z 2026-11-17 03:29:09.179 UTC [1] LOG:  database system is ready to accept connections
+db-1   | 2026-11-17T03:29:28.379101121Z 2026-11-17 03:29:28.378 UTC [92] ERROR:  Auditoria inmutable
+db-1   | 2026-11-17T03:29:28.379117087Z 2026-11-17 03:29:28.378 UTC [92] CONTEXT:  PL/pgSQL function proteger_auditoria() line 2 at RAISE
+db-1   | 2026-11-17T03:29:28.379121059Z 2026-11-17 03:29:28.378 UTC [92] STATEMENT:  UPDATE auditoria SET motivo='Inválido'
+db-1   | 2026-11-17T03:29:33.264099736Z 2026-11-17 03:29:33.263 UTC [92] ERROR:  duplicate key value violates unique constraint "usuario_aq_codigo_key"
+db-1   | 2026-11-17T03:29:33.264116427Z 2026-11-17 03:29:33.263 UTC [92] DETAIL:  Key (aq, codigo)=(SIM-A, U001) already exists.
+db-1   | 2026-11-17T03:29:33.264119970Z 2026-11-17 03:29:33.263 UTC [92] STATEMENT:  INSERT INTO usuario(aq,codigo) VALUES('SIM-A','U001') RETURNING id
+db-1   | 2026-11-17T03:29:38.956958725Z 2026-11-17 03:29:38.956 UTC [92] ERROR:  insert or update on table "predio" violates foreign key constraint "predio_aq_usuario_fkey"
+db-1   | 2026-11-17T03:29:38.956983998Z 2026-11-17 03:29:38.956 UTC [92] DETAIL:  Key (aq, usuario)=(SIM-B, 15) is not present in table "usuario".
+db-1   | 2026-11-17T03:29:38.956987983Z 2026-11-17 03:29:38.956 UTC [92] STATEMENT:  INSERT INTO predio(aq,codigo,usuario) VALUES('SIM-B','CRUCE',15) RETURNING id
+db-1   | 2026-11-17T03:29:40.908134309Z 2026-11-17 03:29:40.907 UTC [55] LOG:  checkpoint starting: immediate force wait
+db-1   | 2026-11-17T03:29:41.179110498Z 2026-11-17 03:29:41.179 UTC [55] LOG:  checkpoint complete: wrote 197 buffers (1.2%); 1 WAL file(s) added, 0 removed, 0 recycled; write=0.032 s, sync=0.202 s, total=0.272 s; sync files=126, longest=0.005 s, average=0.002 s; distance=5480 kB, estimate=5480 kB; lsn=0/1E7FFC8, redo lsn=0/1E7FF90

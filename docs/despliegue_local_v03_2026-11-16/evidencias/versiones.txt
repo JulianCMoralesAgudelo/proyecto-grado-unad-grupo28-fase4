@@ -1,0 +1,6 @@
+Fedora release 44 (Forty Four)
+Linux 7.3.3-200.fc44.x86_64 x86_64 GNU/Linux
+Docker 29.10.0; CPU 6; RAM 50410094592 bytes
+Docker Compose version v5.7.1
+postgres (PostgreSQL) 16.15
+5.2.19

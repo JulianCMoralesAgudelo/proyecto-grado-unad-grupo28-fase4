@@ -1,0 +1,5 @@
+Commit académico: cdb3349993ee184e4c6e3a53d7e3711bcb584e6f
+Árbol académico del prototipo: 7e0da2f5ff4b5dc12e07cef737a61afe3074c161
+Commit público main: d43bc5acb3afec4e1689e803a3582b4dfc943e81
+Repositorio público: https://github.com/JulianCMoralesAgudelo/proyecto-grado-unad-grupo28-fase4
+Comparación: los 32 archivos del prototipo académico coinciden por nombre y blob; el repositorio público añade únicamente README.md.
